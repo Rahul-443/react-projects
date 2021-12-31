@@ -7,6 +7,24 @@ function App() {
   const [people, setPeople] = useState(data);
   const [curPerson, setCurPerson] = useState(0);
 
+  useEffect(() => {
+    const lastIndex = people.length - 1;
+    if (curPerson < 0) {
+      setCurPerson(lastIndex);
+    } else if (curPerson > 3) {
+      setCurPerson(0);
+    }
+  }, [curPerson, people]);
+
+  useEffect(() => {
+    const autoSlideInterval = setInterval(() => {
+      setCurPerson(curPerson + 1);
+    }, 3000);
+    return () => {
+      clearInterval(autoSlideInterval);
+    };
+  }, [curPerson]);
+
   return (
     <section className='section'>
       <div className='title'>
@@ -37,18 +55,10 @@ function App() {
             </article>
           );
         })}
-        <button
-          className='prev'
-          onClick={() =>
-            setCurPerson(prev => (prev > 0 ? prev - 1 : people.length - 1))
-          }
-        >
+        <button className='prev' onClick={() => setCurPerson(curPerson - 1)}>
           <FiChevronLeft />
         </button>
-        <button
-          className='next'
-          onClick={() => setCurPerson(prev => (prev < 3 ? prev + 1 : 0))}
-        >
+        <button className='next' onClick={() => setCurPerson(curPerson + 1)}>
           <FiChevronRight />
         </button>
       </div>
